@@ -1,71 +1,116 @@
+/* Reset default margin and padding */
+body, h1, h2, p, ul, li {
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f1f1f1; 
-  }
-  
-  header {
-    background-color: #3498db; 
-    color: #fff; 
-    text-align: center;
-    padding: 20px 0;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+header {
+  background-color: #007BFF;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+#search-and-forecast {
+  flex: 2;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#search-bar {
+  margin-bottom: 20px;
+}
+
+#search-form {
+  display: flex;
+  gap: 10px;
+}
+
+#search-form input[type="text"] {
+  width: 70%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#search-form button {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#current-weather,
+#forecast {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#saved-searches {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style buttons inside the saved searches section */
+#input-list button {
+  display: block;
+  margin-bottom: 10px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Hover effect for buttons */
+#input-list button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
   main {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    flex-direction: column;
   }
   
-  section {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f9f9f9; 
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-  }
-  
-  h2 {
-    font-size: 1.5em;
-    color: #3498db; 
-  }
-  
-  input[type="text"] {
+  #search-and-forecast {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
   }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #3498db; 
-    color: #fff; 
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
+  #saved-searches {
+    width: 100%;
   }
-  
-  
-  
-  #weather-icon {
-    /* Style for the weather icon (you can use background images, fonts, or SVGs) */
-  }
-  
-  #temperature {
-    font-size: 2em;
-    font-weight: bold;
-  }
-  
-  #forecast-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  
-  
+}

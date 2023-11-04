@@ -11,60 +11,38 @@
       <h1>Weather Dashboard</h1>
     </header>
     <main>
-      <section id="location">
-        <h2>Location</h2>
-        <form id="search-form">
-          <input type="text" name="city-input" placeholder="Enter City" />
-          <button type="submit">Search</button>
-        </form>
-      </section>
-
-      <section id="current-weather">
-        <h2>Current Weather</h2>
-        <div id="city-main">
-          <h2></h2>
-          <p id="temperature"></p>
-          <p id="humidity"></p>
-          <p id="wind-speed"></p>
-          <p id="date"></p>
+      <section id="search-and-forecast">
+        <div id="search-bar">
+          <h2>Search for Weather</h2>
+          <form id="search-form">
+            <input type="text" name="city-input" placeholder="Enter City" />
+            <button type="submit">Search</button>
+          </form>
         </div>
-      </section>
 
-      <section id="forecast">
-        <h2>5-Day Forecast</h2>
-        <div class="container">
-          <div class="row">
-            <div class="col-md-2">
-              <div class="card">
-                <div class="card-body"></div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="card">
-                <div class="card-body"></div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="card">
-                <div class="card-body"></div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="card">
-                <div class="card-body"></div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="card">
-                <div class="card-body"></div>
-              </div>
+        <section id="current-weather">
+          <h2>Current Weather</h2>
+          <div id="city-main">
+            <h2></h2>
+            <p id="temperature"></p>
+            <p id="humidity"></p>
+            <p id="wind-speed"></p>
+            <p id="date"></p>
+          </div>
+        </section>
+
+        <section id="forecast">
+          <h2>5-Day Forecast</h2>
+          <div class="container">
+            <div class="row" id="forecast-cards">
+              <!-- Five forecast cards will be generated here using JavaScript -->
             </div>
           </div>
-        </div>
+        </section>
       </section>
 
-      <section id="search-history">
-        <h2>Search History</h2>
+      <section id="saved-searches">
+        <h2>Saved Searches</h2>
         <div id="input-list"></div>
       </section>
     </main>
