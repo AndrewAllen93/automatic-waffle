@@ -1,152 +1,90 @@
-// Your API key
-const apiKey = "88c360617e4e8a9fa9adfc0120cd8852";
-
-// Event listener for form submit
-document
-  .getElementById("search-form")
-  .addEventListener("submit", function (evt) {
-    evt.preventDefault();
-    const cityName = document.querySelector("[name='city-input']").value;
-    getLatLon(cityName);
-  });
-
-function getLatLon(cityName) {
-  fetch(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`
-  )
-    .then(function (response) {
-      if (!response.ok) {
-        alert("API key not authorized");
-        return;
-      }
-      return response.json();
-    })
-    .then(function (data) {
-      const lat = data[0].lat;
-      const lon = data[0].lon;
-      const city = data[0].name;
-      getWeather(lat, lon, city);
-      getFiveDay(lat, lon);
-      saveCity(city);
-    })
-    .catch(function (error) {
-      console.error("Problem Getting Location Data:", error);
-    });
+// Function to format a timestamp to a localized date string
+function formatDate(timestamp) {
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleDateString();
 }
 
-function getWeather(lat, lon, city) {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      const cardTitle = document.createElement("h2");
-      cardTitle.textContent = city;
+// Define variables to select elements from the HTML
+const searchForm = document.getElementById("search-form");
+const cityInput = document.querySelector('input[name="city-input"]');
+const currentWeatherContainer = document.getElementById("city-main");
+const forecastContainer = document.getElementById("forecast");
+const savedSearches = document.getElementById("input-list");
 
-      const temp = document.createElement("p");
-      temp.textContent = `Temp: ${data.main.temp} F`;
-
-      const humidity = document.createElement("p");
-      humidity.textContent = `Humidity: ${data.main.humidity} %`;
-
-      const windSpeed = document.createElement("p");
-      windSpeed.textContent = `Wind Speed: ${data.wind.speed} MPH`;
-
-      const currentDate = new Date(data.dt * 1000);
-      const date = document.createElement("p");
-      date.textContent = `Date: ${currentDate.toLocaleDateString()}`;
-
-      const cityMain = document.querySelector(".city-main");
-      cityMain.innerHTML = ""; // Clear previous content
-      cityMain.append(cardTitle, temp, humidity, windSpeed, date);
-    })
-    .catch((error) => {
-      console.error("Problem Getting Weather Data:", error);
-    });
-}
-
-function getFiveDay(lat, lon) {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      const container = document.querySelector(".container .row");
-      container.innerHTML = ""; // Clear previous content
-
-      for (let i = 0; i < 5; i++) {
-        const fiveDay = data.list[i * 8];
-        const fiveDayCard = document.createElement("div");
-        fiveDayCard.className = "col-md-2";
-
-        const cardBody = document.createElement("div");
-        cardBody.className = "card-body";
-
-        const fiveCardDate = document.createElement("h4");
-        fiveCardDate.textContent = new Date(
-          fiveDay.dt * 1000
-        ).toLocaleDateString();
-
-        const fiveCardTemp = document.createElement("p");
-        fiveCardTemp.textContent = `Temp: ${fiveDay.main.temp} F`;
-
-        const fiveCardHumidity = document.createElement("p");
-        fiveCardHumidity.textContent = `Humidity: ${fiveDay.main.humidity} %`;
-
-        const fiveCardWind = document.createElement("p");
-        fiveCardWind.textContent = `Wind Speed: ${fiveDay.wind.speed}`;
-
-        cardBody.append(
-          fiveCardDate,
-          fiveCardTemp,
-          fiveCardHumidity,
-          fiveCardWind
-        );
-        fiveDayCard.append(cardBody);
-        container.append(fiveDayCard);
-      }
-    })
-    .catch((error) => {
-      console.error("Problem Getting Weather Data:", error);
-    });
-}
-
-// Save the city to local storage
-function saveCity(city) {
-  const savedArray = JSON.parse(localStorage.getItem("savedArray")) || [];
-  savedArray.push(city);
-  localStorage.setItem("savedArray", JSON.stringify(savedArray));
-  renderButtons();
-}
-
-const textInput = document.querySelector(".form-control");
-const saveButton = document.querySelector(".btn.btn-primary");
-const buttonList = document.getElementById("input-list");
-
-function renderButtons() {
-  buttonList.innerHTML = "";
-
-  const savedArray = JSON.parse(localStorage.getItem("savedArray")) || [];
-  savedArray.forEach(function (text, index) {
-    const button = document.createElement("button");
-    button.textContent = text;
-    buttonList.appendChild(button);
-
-    button.addEventListener("click", function () {
-      getLatLon(text); // Fetch weather data for the clicked city
-    });
-  });
-}
-
-saveButton.addEventListener("click", function () {
-  const textValue = textInput.value.trim();
-
-  if (textValue !== "") {
-    saveCity(textValue);
-    textInput.value = "";
-  } else {
-    alert("Please enter some text before saving.");
-  }
+// Event listener for the search form
+searchForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const city = cityInput.value;
+  getWeatherData(city);
 });
 
-renderButtons();
+// Function to fetch weather data from an API
+function getWeatherData(city) {
+  // Replace 'YOUR_API_KEY' with your actual API key
+  const apiKey = "a3c1cdb5adfcc9b573893772664108c2";
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+  fetch(apiUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      displayCurrentWeather(data);
+      return data.coord; // Get coordinates for the 5-day forecast
+    })
+    .then((coord) => {
+      return fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}`
+      );
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      displayForecast(data);
+      saveSearch(city);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+}
+
+// Function to display current weather
+function displayCurrentWeather(data) {
+  currentWeatherContainer.innerHTML = `
+    <h2>${data.name}</h2>
+    <p>Date: ${new Date().toLocaleDateString()}</p>
+    <p>Temperature: ${data.main.temp}°C</p>
+    <p>Humidity: ${data.main.humidity}%</p>
+    <p>Wind Speed: ${data.wind.speed} m/s</p>
+  `;
+  // You can add an icon representation of weather conditions here
+}
+
+// Function to display the 5-day forecast
+function displayForecast(data) {
+  forecastContainer.innerHTML = "";
+
+  for (let i = 0; i < 5; i++) {
+    const forecast = data.list[i * 8]; // Data for every 8th hour (approximately a day)
+
+    const forecastCard = document.createElement("div");
+    forecastCard.classList.add("forecast-box");
+    forecastCard.innerHTML = `
+      <p>Date: ${new Date(forecast.dt * 1000).toLocaleDateString()}</p>
+      <p>Temperature: ${forecast.main.temp}°C</p>
+      <p>Humidity: ${forecast.main.humidity}%</p>
+      <p>Wind Speed: ${forecast.wind.speed} m/s</p>
+    `;
+    // You can add an icon representation of weather conditions here
+
+    forecastContainer.appendChild(forecastCard);
+  }
+}
+
+// Function to save the city to search history
+function saveSearch(city) {
+  const searchItem = document.createElement("li");
+  searchItem.textContent = city;
+  savedSearches.appendChild(searchItem);
+
+  searchItem.addEventListener("click", () => {
+    getWeatherData(city);
+  });
+}

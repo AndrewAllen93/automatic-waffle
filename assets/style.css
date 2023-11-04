@@ -1,116 +1,140 @@
-/* Reset default margin and padding */
-body, h1, h2, p, ul, li {
+/* Reset some default styles */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
+/* Set a background color and font styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  background-color: #f4f4f4;
 }
 
+/* Style the header */
 header {
-  background-color: #007BFF;
-  color: #fff;
+  background-color: #3498db;
   text-align: center;
-  padding: 20px;
+  padding: 20px 0;
 }
 
+/* Style the h1 in the header */
+header h1 {
+  color: #fff;
+  font-size: 2.5rem;
+}
+
+/* Center the main content */
 main {
   display: flex;
-  justify-content: space-between;
-  margin: 20px;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 20px;
 }
 
+/* Style the search-and-forecast section */
 #search-and-forecast {
   flex: 2;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Style the search-bar */
 #search-bar {
-  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Style the search form and its elements */
 #search-form {
   display: flex;
   gap: 10px;
 }
 
-#search-form input[type="text"] {
-  width: 70%;
+/* Style the input and button in the search form */
+input[name="city-input"] {
+  flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
+  outline: none;
 }
 
-#search-form button {
-  padding: 10px 20px;
-  background-color: #007BFF;
+button[type="submit"] {
+  background-color: #3498db;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 10px 20px;
   cursor: pointer;
 }
 
-#current-weather,
-#forecast {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+/* Style the current-weather section */
+#current-weather {
+  background-color: #fff;
+  border-radius: 10px;
   padding: 20px;
-  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.container {
-  display: flex;
-  justify-content: space-between;
+/* Style the forecast section */
+#forecast {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
+/* Style the saved-searches section */
 #saved-searches {
   flex: 1;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Style buttons inside the saved searches section */
-#input-list button {
-  display: block;
+/* Style the h2 elements */
+h2 {
+  color: #3498db;
+  font-size: 1.5rem;
   margin-bottom: 10px;
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  cursor: pointer;
 }
 
-/* Hover effect for buttons */
-#input-list button:hover {
-  background-color: #0056b3;
+/* Style the forecast boxes */
+.forecast-boxes {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-/* Responsive design for small screens */
-@media (max-width: 768px) {
-  main {
-    flex-direction: column;
-  }
-  
-  #search-and-forecast {
-    width: 100%;
-  }
+.forecast-box {
+  flex: 1;
+  background-color: #f2f2f2;
+  color: black;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #3498db; /* Add a distinct border around each box */
+  margin: 5px; /* Add margin to separate boxes */
+}
 
-  #saved-searches {
-    width: 100%;
-  }
+/* Style individual forecast boxes */
+.forecast-box h3 {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.forecast-box p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Style the input list in saved-searches */
+#input-list {
+  list-style: none;
 }
