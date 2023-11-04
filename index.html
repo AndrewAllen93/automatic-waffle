@@ -13,25 +13,59 @@
     <main>
       <section id="location">
         <h2>Location</h2>
-        <input type="text" id="city" placeholder="Enter City" />
-        <button id="search">Search</button>
+        <form id="search-form">
+          <input type="text" name="city-input" placeholder="Enter City" />
+          <button type="submit">Search</button>
+        </form>
       </section>
 
       <section id="current-weather">
         <h2>Current Weather</h2>
-        <div id="weather-icon"></div>
-        <div id="temperature"></div>
-        <div id="description"></div>
+        <div id="city-main">
+          <h2></h2>
+          <p id="temperature"></p>
+          <p id="humidity"></p>
+          <p id="wind-speed"></p>
+          <p id="date"></p>
+        </div>
       </section>
 
       <section id="forecast">
         <h2>5-Day Forecast</h2>
-        <ul id="forecast-list"></ul>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="card">
+                <div class="card-body"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="search-history">
         <h2>Search History</h2>
-        <div id="search-history-list"></div>
+        <div id="input-list"></div>
       </section>
     </main>
     <script src="./assets/script.js"></script>

@@ -1,107 +1,152 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const apiKey = "88c360617e4e8a9fa9adfc0120cd8852"; // Replace with your API key
-  const searchButton = document.getElementById("search");
-  const cityInput = document.getElementById("city");
-  const currentWeather = document.getElementById("current-weather");
-  const forecastList = document.getElementById("forecast-list");
-  const historyElement = document.getElementById("search-history-list");
+// Your API key
+const apiKey = "88c360617e4e8a9fa9adfc0120cd8852";
 
-  searchButton.addEventListener("click", function () {
-    const city = cityInput.value;
-
-    // Fetch current weather data
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Process and display current weather data
-        displayCurrentWeather(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching current weather data:", error);
-      });
-
-    // Fetch 5-day forecast data
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Process and display 5-day forecast data
-        displayForecast(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching forecast data:", error);
-      });
-
-    // Add the city to the search history
-    addToSearchHistory(city);
+// Event listener for form submit
+document
+  .getElementById("search-form")
+  .addEventListener("submit", function (evt) {
+    evt.preventDefault();
+    const cityName = document.querySelector("[name='city-input']").value;
+    getLatLon(cityName);
   });
 
-  function displayCurrentWeather(data) {
-    const cityName = data.name;
-    const date = new Date(data.dt * 1000); // Convert timestamp to date
-    const weatherIcon = data.weather[0].icon;
-    const temperature = data.main.temp;
-    const humidity = data.main.humidity;
-    const windSpeed = data.wind.speed;
+function getLatLon(cityName) {
+  fetch(
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey}`
+  )
+    .then(function (response) {
+      if (!response.ok) {
+        alert("API key not authorized");
+        return;
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      const lat = data[0].lat;
+      const lon = data[0].lon;
+      const city = data[0].name;
+      getWeather(lat, lon, city);
+      getFiveDay(lat, lon);
+      saveCity(city);
+    })
+    .catch(function (error) {
+      console.error("Problem Getting Location Data:", error);
+    });
+}
 
-    const temperatureElement = document.getElementById("temperature");
-    const descriptionElement = document.getElementById("description");
+function getWeather(lat, lon, city) {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      const cardTitle = document.createElement("h2");
+      cardTitle.textContent = city;
 
-    // Update HTML elements with the retrieved data
-    temperatureElement.textContent = `Temperature: ${temperature}°C`;
-    descriptionElement.textContent = `Humidity: ${humidity}% | Wind Speed: ${windSpeed} m/s`;
+      const temp = document.createElement("p");
+      temp.textContent = `Temp: ${data.main.temp} F`;
 
-    currentWeather.innerHTML = `
-        <h2>${cityName}</h2>
-        <p>Date: ${date.toLocaleString()}</p>
-        <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon" />
-        <p>Temperature: ${temperature}°C</p>
-        <p>Humidity: ${humidity}% | Wind Speed: ${windSpeed} m/s</p>
-      `;
-  }
+      const humidity = document.createElement("p");
+      humidity.textContent = `Humidity: ${data.main.humidity} %`;
 
-  function displayForecast(data) {
-    const forecastList = document.getElementById("forecast-list");
-    forecastList.innerHTML = ""; // Clear the previous forecast data
+      const windSpeed = document.createElement("p");
+      windSpeed.textContent = `Wind Speed: ${data.wind.speed} MPH`;
 
-    for (let i = 0; i < data.list.length; i += 8) {
-      const forecast = data.list[i];
-      const date = new Date(forecast.dt * 1000);
-      const weatherIcon = forecast.weather[0].icon;
-      const temperature = forecast.main.temp;
-      const humidity = forecast.main.humidity;
-      const windSpeed = forecast.wind.speed;
+      const currentDate = new Date(data.dt * 1000);
+      const date = document.createElement("p");
+      date.textContent = `Date: ${currentDate.toLocaleDateString()}`;
 
-      const listItem = document.createElement("li");
-      listItem.innerHTML = `
-          <p>Date: ${date.toLocaleDateString()}</p>
-          <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon" />
-          <p>Temperature: ${temperature}°C</p>
-          <p>Humidity: ${humidity}% | Wind Speed: ${windSpeed} m/s</p>
-        `;
+      const cityMain = document.querySelector(".city-main");
+      cityMain.innerHTML = ""; // Clear previous content
+      cityMain.append(cardTitle, temp, humidity, windSpeed, date);
+    })
+    .catch((error) => {
+      console.error("Problem Getting Weather Data:", error);
+    });
+}
 
-      forecastList.appendChild(listItem);
-    }
-  }
+function getFiveDay(lat, lon) {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      const container = document.querySelector(".container .row");
+      container.innerHTML = ""; // Clear previous content
 
-  function addToSearchHistory(city) {
-    // This is a basic example using local storage
-    const searchHistory =
-      JSON.parse(localStorage.getItem("searchHistory")) || [];
+      for (let i = 0; i < 5; i++) {
+        const fiveDay = data.list[i * 8];
+        const fiveDayCard = document.createElement("div");
+        fiveDayCard.className = "col-md-2";
 
-    // Add the city to the search history if it's not already there
-    if (!searchHistory.includes(city)) {
-      searchHistory.push(city);
-      localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-    }
+        const cardBody = document.createElement("div");
+        cardBody.className = "card-body";
 
-    // Display the search history (you can customize how you want to display it)
-    const historyElement = document.getElementById("search-history");
-    historyElement.innerHTML = searchHistory
-      .map((city) => `<p>${city}</p>`)
-      .join("");
+        const fiveCardDate = document.createElement("h4");
+        fiveCardDate.textContent = new Date(
+          fiveDay.dt * 1000
+        ).toLocaleDateString();
+
+        const fiveCardTemp = document.createElement("p");
+        fiveCardTemp.textContent = `Temp: ${fiveDay.main.temp} F`;
+
+        const fiveCardHumidity = document.createElement("p");
+        fiveCardHumidity.textContent = `Humidity: ${fiveDay.main.humidity} %`;
+
+        const fiveCardWind = document.createElement("p");
+        fiveCardWind.textContent = `Wind Speed: ${fiveDay.wind.speed}`;
+
+        cardBody.append(
+          fiveCardDate,
+          fiveCardTemp,
+          fiveCardHumidity,
+          fiveCardWind
+        );
+        fiveDayCard.append(cardBody);
+        container.append(fiveDayCard);
+      }
+    })
+    .catch((error) => {
+      console.error("Problem Getting Weather Data:", error);
+    });
+}
+
+// Save the city to local storage
+function saveCity(city) {
+  const savedArray = JSON.parse(localStorage.getItem("savedArray")) || [];
+  savedArray.push(city);
+  localStorage.setItem("savedArray", JSON.stringify(savedArray));
+  renderButtons();
+}
+
+const textInput = document.querySelector(".form-control");
+const saveButton = document.querySelector(".btn.btn-primary");
+const buttonList = document.getElementById("input-list");
+
+function renderButtons() {
+  buttonList.innerHTML = "";
+
+  const savedArray = JSON.parse(localStorage.getItem("savedArray")) || [];
+  savedArray.forEach(function (text, index) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    buttonList.appendChild(button);
+
+    button.addEventListener("click", function () {
+      getLatLon(text); // Fetch weather data for the clicked city
+    });
+  });
+}
+
+saveButton.addEventListener("click", function () {
+  const textValue = textInput.value.trim();
+
+  if (textValue !== "") {
+    saveCity(textValue);
+    textInput.value = "";
+  } else {
+    alert("Please enter some text before saving.");
   }
 });
+
+renderButtons();
