@@ -1,90 +1,77 @@
-// Function to format a timestamp to a localized date string
-function formatDate(timestamp) {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleDateString();
-}
+const apiKey = 'a3c1cdb5adfcc9b573893772664108c2'; // Replace with your OpenWeather API key
 
-// Define variables to select elements from the HTML
-const searchForm = document.getElementById("search-form");
-const cityInput = document.querySelector('input[name="city-input"]');
-const currentWeatherContainer = document.getElementById("city-main");
-const forecastContainer = document.getElementById("forecast");
-const savedSearches = document.getElementById("input-list");
+// Event listener for the Search button
+document.querySelector('.search-btn').addEventListener('click', () => {
+  const cityInput = document.querySelector('.city-input');
+  const city = cityInput.value.trim();
 
-// Event listener for the search form
-searchForm.addEventListener("submit", function (event) {
-  event.preventDefault();
-  const city = cityInput.value;
-  getWeatherData(city);
+  if (city) {
+    // Save the search to Local Storage
+    saveSearch(city);
+    fetchWeatherData(city);
+  }
 });
 
-// Function to fetch weather data from an API
-function getWeatherData(city) {
-  // Replace 'YOUR_API_KEY' with your actual API key
-  const apiKey = "a3c1cdb5adfcc9b573893772664108c2";
-  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
-
-  fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      displayCurrentWeather(data);
-      return data.coord; // Get coordinates for the 5-day forecast
-    })
-    .then((coord) => {
-      return fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}`
-      );
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      displayForecast(data);
-      saveSearch(city);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-}
-
-// Function to display current weather
-function displayCurrentWeather(data) {
-  currentWeatherContainer.innerHTML = `
-    <h2>${data.name}</h2>
-    <p>Date: ${new Date().toLocaleDateString()}</p>
-    <p>Temperature: ${data.main.temp}°C</p>
-    <p>Humidity: ${data.main.humidity}%</p>
-    <p>Wind Speed: ${data.wind.speed} m/s</p>
-  `;
-  // You can add an icon representation of weather conditions here
-}
-
-// Function to display the 5-day forecast
-function displayForecast(data) {
-  forecastContainer.innerHTML = "";
-
-  for (let i = 0; i < 5; i++) {
-    const forecast = data.list[i * 8]; // Data for every 8th hour (approximately a day)
-
-    const forecastCard = document.createElement("div");
-    forecastCard.classList.add("forecast-box");
-    forecastCard.innerHTML = `
-      <p>Date: ${new Date(forecast.dt * 1000).toLocaleDateString()}</p>
-      <p>Temperature: ${forecast.main.temp}°C</p>
-      <p>Humidity: ${forecast.main.humidity}%</p>
-      <p>Wind Speed: ${forecast.wind.speed} m/s</p>
-    `;
-    // You can add an icon representation of weather conditions here
-
-    forecastContainer.appendChild(forecastCard);
-  }
-}
-
-// Function to save the city to search history
+// Function to save the search to Local Storage
 function saveSearch(city) {
-  const searchItem = document.createElement("li");
-  searchItem.textContent = city;
-  savedSearches.appendChild(searchItem);
+  let searches = JSON.parse(localStorage.getItem('searches')) || [];
+  searches.push(city);
+  // Remove duplicates
+  searches = [...new Set(searches)];
+  localStorage.setItem('searches', JSON.stringify(searches));
+  updateSearchHistory();
+}
 
-  searchItem.addEventListener("click", () => {
-    getWeatherData(city);
+// Function to update the search history displayed on the page
+function updateSearchHistory() {
+  const searchHistory = JSON.parse(localStorage.getItem('searches')) || [];
+  const searchHistoryElement = document.querySelector('.search-history');
+
+  // Clear previous search history
+  searchHistoryElement.innerHTML = '';
+
+  // Display the search history
+  searchHistory.forEach((search, index) => {
+    const searchItem = document.createElement('div');
+    searchItem.textContent = search;
+    searchHistoryElement.appendChild(searchItem);
   });
+}
+
+// When the page loads, update the search history
+window.addEventListener('load', updateSearchHistory);
+
+// Function to fetch weather data and update the DOM
+function fetchWeatherData(city) {
+  // Fetch current weather data with units set to imperial (Fahrenheit)
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`)
+    .then(response => response.json())
+    .then(data => {
+      // Update the current weather details
+      document.querySelector('.current-weather h2').textContent = `${data.name}, ${data.sys.country}`;
+      document.querySelector('.current-weather h6:nth-of-type(1)').textContent = `Temperature: ${data.main.temp}°F`;
+      document.querySelector('.current-weather h6:nth-of-type(2)').textContent = `Wind: ${data.wind.speed} M/S`;
+      document.querySelector('.current-weather h6:nth-of-type(3)').textContent = `Humidity: ${data.main.humidity}%`;
+
+      return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`);
+    })
+    .then(response => response.json())
+    .then(data => {
+      const forecastCards = document.querySelectorAll('.weather-cards .card');
+
+      for (let i = 0; i < 5; i++) {
+        const day = data.list[i * 8];
+        const date = new Date(day.dt * 1000);
+        const temperature = day.main.temp;
+        const wind = day.wind.speed;
+        const humidity = day.main.humidity;
+
+        // Update the forecast cards
+        forecastCards[i].querySelector('h3').textContent = date.toLocaleDateString();
+        forecastCards[i].querySelectorAll('h6')[0].textContent = `Temp: ${temperature}°F`;
+        forecastCards[i].querySelectorAll('h6')[1].textContent = `Wind: ${wind} M/S`;
+        forecastCards[i].querySelectorAll('h6')[2].textContent = `Humidity: ${humidity}%`;
+      }
+    })
+    .catch(error => console.error('Error:', error));
 }

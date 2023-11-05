@@ -7,66 +7,63 @@
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Weather Dashboard</h1>
-    </header>
-    <main>
-      <section id="search-and-forecast">
-        <div id="search-bar">
-          <h2>Search for Weather</h2>
-          <form id="search-form">
-            <input
-              type="text"
-              name="city-input"
-              placeholder="Enter a City Name"
-            />
-            <button type="submit">Search</button>
-          </form>
+    <h1>Weather Dashboard</h1>
+    <div class="container">
+      <div class="weather-input">
+        <h3>Enter a City Name</h3>
+        <input
+          class="city-input"
+          type="text"
+          placeholder="E.g., New York, London, Tokyo"
+        />
+        <button class="search-btn">Search</button>
+      </div>
+      <div class="weather-data">
+        <div class="current-weather">
+          <div class="details">
+            <h2>City Name (Country Code)</h2>
+            <h6>Temperature: __°C</h6>
+            <h6>Wind: __ M/S</h6>
+            <h6>Humidity: __%</h6>
+          </div>
         </div>
-
-        <section id="current-weather">
-          <h2>Current Weather</h2>
-          <div id="city-main">
-            <h2></h2>
-            <p id="temperature"></p>
-            <p id="humidity"></p>
-            <p id="wind-speed"></p>
-            <p id="date"></p>
-          </div>
-        </section>
-
-        <section id="forecast">
+        <div class="days-forecast">
           <h2>5-Day Forecast</h2>
-          <div class="forecast-boxes">
-            <div class="forecast-box">
-              <!-- Day 1 forecast content -->
-              <h3>Day 1 Date</h3>
-            </div>
-            <div class="forecast-box">
-              <!-- Day 2 forecast content -->
-              <h3>Day 2 Date</h3>
-            </div>
-            <div class="forecast-box">
-              <!-- Day 3 forecast content -->
-              <h3>Day 3 Date</h3>
-            </div>
-            <div class="forecast-box">
-              <!-- Day 4 forecast content -->
-              <h3>Day 4 Date</h3>
-            </div>
-            <div class="forecast-box">
-              <!-- Day 5 forecast content -->
-              <h3>Day 5 Date</h3>
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <section id="saved-searches">
-        <h2>Saved Searches</h2>
-        <div id="input-list"></div>
-      </section>
-    </main>
+          <ul class="weather-cards">
+            <li class="card">
+              <h3>Date 1 (Day of the week)</h3>
+              <h6>Temp: __°C</h6>
+              <h6>Wind: __ M/S</h6>
+              <h6>Humidity: __%</h6>
+            </li>
+            <li class="card">
+              <h3>Date 2 (Day of the week)</h3>
+              <h6>Temp: __°C</h6>
+              <h6>Wind: __ M/S</h6>
+              <h6>Humidity: __%</h6>
+            </li>
+            <li class="card">
+              <h3>Date 3 (Day of the week)</h3>
+              <h6>Temp: __°C</h6>
+              <h6>Wind: __ M/S</h6>
+              <h6>Humidity: __%</h6>
+            </li>
+            <li class="card">
+              <h3>Date 4 (Day of the week)</h3>
+              <h6>Temp: __°C</h6>
+              <h6>Wind: __ M/S</h6>
+              <h6>Humidity: __%</h6>
+            </li>
+            <li class="card">
+              <h3>Date 5 (Day of the week)</h3>
+              <h6>Temp: __°C</h6>
+              <h6>Wind: __ M/S</h6>
+              <h6>Humidity: __%</h6>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <script src="./assets/script.js"></script>
   </body>
 </html>
