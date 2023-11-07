@@ -22,17 +22,17 @@ function saveSearch(city) {
 function updateSearchHistory() {
   const searchHistory = JSON.parse(localStorage.getItem("searches")) || [];
   const searchItemsContainer = document.querySelector(".search-items");
-  searchItemsContainer.innerHTML = ""; // Clear existing items
+  searchItemsContainer.innerHTML = ""; 
 
   searchHistory.forEach((search, index) => {
     const searchItem = document.createElement("div");
     const searchLink = document.createElement("a");
 
-    searchLink.href = "#"; // Add a placeholder URL
+    searchLink.href = "#"; 
     searchLink.textContent = search;
     searchLink.addEventListener("click", (event) => {
-      event.preventDefault(); // Prevent the default link behavior
-      // Handle the click event here, e.g., perform a new search with the clicked term
+      event.preventDefault(); 
+      
       fetchWeatherData(search);
     });
 
@@ -51,25 +51,24 @@ function fetchWeatherData(city) {
     .then((response) => response.json())
     .then((data) => {
       const emojiMap = {
-        "01d": "☀️", // Clear sky (day)
-        "01n": "🌙", // Clear sky (night)
-        "02d": "🌤️", // Few clouds (day)
-        "02n": "🌤️", // Few clouds (night)
-        "03d": "🌥️", // Scattered clouds (day)
-        "03n": "🌥️", // Scattered clouds (night)
-        "04d": "☁️", // Broken clouds (day)
-        "04n": "☁️", // Broken clouds (night)
-        "09d": "🌧️", // Rain (day)
-        "09n": "🌧️", // Rain (night)
-        "10d": "🌦️", // Rain and few clouds (day)
-        "10n": "🌦️", // Rain and few clouds (night)
-        "11d": "⛈️", // Thunderstorm (day)
-        "11n": "⛈️", // Thunderstorm (night)
-        "13d": "🌨️", // Snow (day)
-        "13n": "🌨️", // Snow (night)
-        "50d": "🌫️", // Mist (day)
-        "50n": "🌫️", // Mist (night)
-        // You can add more mappings for various weather conditions here
+        "01d": "☀️", 
+        "01n": "🌙", 
+        "02d": "🌤️", 
+        "02n": "🌤️", 
+        "03d": "🌥️", 
+        "03n": "🌥️", 
+        "04d": "☁️", 
+        "04n": "☁️", 
+        "09d": "🌧️", 
+        "09n": "🌧️", 
+        "10d": "🌦️", 
+        "10n": "🌦️", 
+        "11d": "⛈️", 
+        "11n": "⛈️", 
+        "13d": "🌨️", 
+        "13n": "🌨️", 
+        "50d": "🌫️", 
+        "50n": "🌫️", 
       };
 
       const weatherEmoji = emojiMap[data.weather[0].icon];
@@ -103,25 +102,25 @@ function fetchWeatherData(city) {
         const humidity = day.main.humidity;
 
         const emojiMap = {
-          "01d": "☀️", // Clear sky (day)
-          "01n": "🌙", // Clear sky (night)
-          "02d": "🌤️", // Few clouds (day)
-          "02n": "🌤️", // Few clouds (night)
-          "03d": "🌥️", // Scattered clouds (day)
-          "03n": "🌥️", // Scattered clouds (night)
-          "04d": "☁️", // Broken clouds (day)
-          "04n": "☁️", // Broken clouds (night)
-          "09d": "🌧️", // Rain (day)
-          "09n": "🌧️", // Rain (night)
-          "10d": "🌦️", // Rain and few clouds (day)
-          "10n": "🌦️", // Rain and few clouds (night)
-          "11d": "⛈️", // Thunderstorm (day)
-          "11n": "⛈️", // Thunderstorm (night)
-          "13d": "🌨️", // Snow (day)
-          "13n": "🌨️", // Snow (night)
-          "50d": "🌫️", // Mist (day)
-          "50n": "🌫️", // Mist (night)
-          // You can add more mappings for various weather conditions here
+          "01d": "☀️", 
+          "01n": "🌙", 
+          "02d": "🌤️", 
+          "02n": "🌤️", 
+          "03d": "🌥️", 
+          "03n": "🌥️", 
+          "04d": "☁️", 
+          "04n": "☁️", 
+          "09d": "🌧️", 
+          "09n": "🌧️", 
+          "10d": "🌦️", 
+          "10n": "🌦️", 
+          "11d": "⛈️", 
+          "11n": "⛈️", 
+          "13d": "🌨️", 
+          "13n": "🌨️", 
+          "50d": "🌫️", 
+          "50n": "🌫️", 
+          
         };
 
         const weatherEmoji = emojiMap[day.weather[0].icon];
